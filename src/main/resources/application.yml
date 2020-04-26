@@ -1,0 +1,14 @@
+server:
+  port: 7080
+
+spring:
+  mvc:
+    servlet:
+      path: /uni-gateway
+
+logging:
+  level:
+    root: warn
+    com: info
+  file:
+    name: logs/uni-gateway.log
