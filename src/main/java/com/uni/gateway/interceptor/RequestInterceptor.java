@@ -24,14 +24,18 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String result = "";
         try {
+            log.info("准备判断是否存在此路由: {}", request.getRequestURI());
             String strRoute = HttpTools.httpGet(Constant.ROUTER_URL + "?url=" + request.getRequestURI());
             if (!StringUtils.isEmpty(strRoute)) {
+                log.info("确认存在 {} 路由", request.getRequestURI());
                 JSONObject routeMap = JSONObject.parseObject(strRoute);
                 if (Boolean.parseBoolean(String.valueOf(((JSONObject) routeMap.get("data")).get("authority")))) {
                     // todo 权限验证
                 }
                 String redirectIps = String.valueOf(((JSONObject) routeMap.get("data")).get("ipPorts"));
+                log.info("重定向ipPorts群: {}", redirectIps);
                 String redirectUrl = String.valueOf(((JSONObject) routeMap.get("data")).get("url"));
+                log.info("重定向url: {}", redirectUrl);
                 if (Constant.GET.equals(request.getMethod())) {
                     result = HttpTools.httpGet(GpJoinTools.joinGet(redirectIps, redirectUrl, request.getParameterMap()));
                 } else if (Constant.POST.equals(request.getMethod())) {
@@ -42,6 +46,7 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
             e.printStackTrace();
             log.error("preHandle fail: {}", e.getMessage());
         }
+        log.info("返回重定向结果: {}", result);
         response.getWriter().append(result);
         return false;
     }
