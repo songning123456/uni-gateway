@@ -9,6 +9,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
 
 /**
  * @author songning
@@ -23,19 +24,13 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
         String uuid = StringUtils.getRandomUuid("");
         String params = (null != request.getParameterMap() && request.getParameterMap().size() > 0) ? JSONObject.toJSONString(request.getParameterMap()) : new RequestWrapper(request).getBody();
         log.info(String.format("Request[%s] IP:[%s] URL:[%s], Protocol:[%s], Params:%s", uuid, getIpAddr(request), request.getRequestURL(), request.getProtocol(), params));
-        request.setAttribute("startTime", System.currentTimeMillis());
-        request.setAttribute("uuid", uuid);
-        return super.preHandle(request, response, handler);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("result", 123);
+        jsonObject.put("status", 200);
+        response.getWriter().append(jsonObject.toString());
+        return false;
     }
 
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        long timeout = System.currentTimeMillis() - (Long) request.getAttribute("startTime");
-        String uuid = (String) request.getAttribute("uuid");
-        log.info(String.format("Response[%s] [%s] Timeout:[%s ms], ResponseStatus:[%s], ResponseBodySize:[%s], Error:[%s]",
-                uuid, request.getRequestURI(), timeout, response.getStatus(), response.getBufferSize(), ex != null ? ex.getMessage() : "null"));
-        super.afterCompletion(request, response, handler, ex);
-    }
 
     private String getIpAddr(HttpServletRequest request) {
         String ip = request.getHeader("x-forwarded-for");
