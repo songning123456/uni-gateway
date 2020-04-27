@@ -1,6 +1,8 @@
-package com.uni.gateway.security.aop;
+package com.uni.gateway.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
+import com.uni.gateway.request.RequestWrapper;
+import com.uni.gateway.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -9,21 +11,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * http请求拦截器
- *
- * @author gehoubao
- * @create 2019-12-30 10:18
- **/
-@Component
+ * @author songning
+ * @date 2020/4/27
+ * description
+ */
 @Slf4j
+@Component
 public class RequestInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String uuid = StringTools.getRandomUuid("");
+        String uuid = StringUtils.getRandomUuid("");
         String params = (null != request.getParameterMap() && request.getParameterMap().size() > 0) ? JSONObject.toJSONString(request.getParameterMap()) : new RequestWrapper(request).getBody();
-
-        log.info(String.format("Request[%s] IP:[%s] URL:[%s], Protocol:[%s], Params:%s",
-                uuid, getIpAddr(request), request.getRequestURL(), request.getProtocol(), params));
+        log.info(String.format("Request[%s] IP:[%s] URL:[%s], Protocol:[%s], Params:%s", uuid, getIpAddr(request), request.getRequestURL(), request.getProtocol(), params));
         request.setAttribute("startTime", System.currentTimeMillis());
         request.setAttribute("uuid", uuid);
         return super.preHandle(request, response, handler);
@@ -38,7 +37,7 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
         super.afterCompletion(request, response, handler, ex);
     }
 
-    private String getIpAddr(HttpServletRequest request) {
+    public String getIpAddr(HttpServletRequest request) {
         String ip = request.getHeader("x-forwarded-for");
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("Proxy-Client-IP");
