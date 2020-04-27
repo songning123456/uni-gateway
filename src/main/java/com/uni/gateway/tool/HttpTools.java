@@ -1,0 +1,66 @@
+package com.uni.gateway.tool;
+
+import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
+
+/**
+ * @author songning
+ * @date 2020/4/27
+ * description
+ */
+@Slf4j
+public class HttpTools {
+
+    public static String httpGet(String url) {
+        HttpResponse response;
+        String result = "";
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        HttpGet httpGet = new HttpGet(url);
+        try {
+            response = httpClient.execute(httpGet);
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                result = EntityUtils.toString(response.getEntity(), "utf-8");
+            } else {
+                log.error("~~~GET请求连接失败: {}~~~", response.getStatusLine().getStatusCode());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("getQuery fail: url => {}, message => {}", url, e.getMessage());
+        }
+        return result;
+    }
+
+    public static String httpPost(String url, JSONObject params) {
+        HttpResponse response;
+        String result = "";
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        HttpPost httpPost = new HttpPost(url);
+        try {
+            if (params != null) {
+                //解决中文乱码问题
+                StringEntity entity = new StringEntity(params.toString(), "utf-8");
+                entity.setContentEncoding("UTF-8");
+                entity.setContentType("application/json");
+                httpPost.setEntity(entity);
+            }
+            response = httpClient.execute(httpPost);
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                result = EntityUtils.toString(response.getEntity(), "utf-8");
+            } else {
+                log.error("~~~POST请求连接失败: {}~~~", response.getStatusLine().getStatusCode());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("postQuery fail: url => {}, params => {}, message: {}", url, params, e.getMessage());
+        }
+        return result;
+    }
+}
