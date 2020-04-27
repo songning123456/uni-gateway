@@ -27,7 +27,7 @@ public class HttpTools {
             return EntityUtils.toString(response.getEntity(), "utf-8");
         } else {
             log.error("~~~GET请求连接失败: {}~~~", response.getStatusLine().getStatusCode());
-            throw new Exception(String.valueOf(response.getStatusLine().getStatusCode()));
+            throw new Exception("httpGet fail:" + response.getStatusLine().getStatusCode());
         }
     }
 
@@ -46,7 +46,7 @@ public class HttpTools {
             return EntityUtils.toString(response.getEntity(), "utf-8");
         } else {
             log.error("~~~POST请求连接失败: {}~~~", response.getStatusLine().getStatusCode());
-            throw new Exception(String.valueOf(response.getStatusLine().getStatusCode()));
+            throw new Exception("httpPost fail:" + response.getStatusLine().getStatusCode());
         }
     }
 }
