@@ -1,6 +1,7 @@
 package com.uni.gateway.pojo;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
@@ -23,6 +24,6 @@ public class ErrorResponse {
 
     @Override
     public String toString() {
-        return JSONObject.toJSONString(this);
+        return JSONObject.toJSONString(this, SerializerFeature.WriteMapNullValue);
     }
 }

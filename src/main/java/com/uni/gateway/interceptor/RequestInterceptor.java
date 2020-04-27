@@ -31,7 +31,7 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
             try {
                 strRoute = HttpTools.httpGet(Constant.ROUTER_URL + "?url=" + request.getRequestURI());
             } catch (Exception e) {
-                ErrorResponse errorResponse = ErrorResponse.builder().status(202).message(e.getMessage()).build();
+                ErrorResponse errorResponse = ErrorResponse.builder().status(400).message(e.getMessage()).build();
                 response.getWriter().append(errorResponse.toString());
                 return false;
             }
@@ -53,13 +53,16 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
                         result = HttpTools.httpPost(Constant.HTTP + redirectIpPort + redirectUrl, GpJoinTools.joinPost(request));
                     }
                 } catch (Exception e) {
-                    ErrorResponse errorResponse = ErrorResponse.builder().status(202).message(e.getMessage()).build();
+                    ErrorResponse errorResponse = ErrorResponse.builder().status(400).message(e.getMessage()).build();
                     response.getWriter().append(errorResponse.toString());
                     return false;
                 }
             }
         } catch (Exception e) {
             log.error("preHandle fail: {}", e.getMessage());
+            ErrorResponse errorResponse = ErrorResponse.builder().status(400).message(e.getMessage()).build();
+            response.getWriter().append(errorResponse.toString());
+            return false;
         }
         log.info("返回重定向结果: {}", result);
         response.getWriter().append(result);

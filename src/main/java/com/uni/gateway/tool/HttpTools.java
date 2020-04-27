@@ -38,7 +38,8 @@ public class HttpTools {
             //解决中文乱码问题
             StringEntity entity = new StringEntity(params.toString(), "utf-8");
             entity.setContentEncoding("UTF-8");
-            entity.setContentType("application/json");
+//            entity.setContentType("application/json");
+            entity.setContentType("multipart/form-data");
             httpPost.setEntity(entity);
         }
         HttpResponse response = httpClient.execute(httpPost);
