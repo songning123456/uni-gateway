@@ -19,48 +19,34 @@ import org.apache.http.util.EntityUtils;
 @Slf4j
 public class HttpTools {
 
-    public static String httpGet(String url) {
-        HttpResponse response;
-        String result = "";
+    public static String httpGet(String url) throws Exception {
         HttpClient httpClient = HttpClientBuilder.create().build();
         HttpGet httpGet = new HttpGet(url);
-        try {
-            response = httpClient.execute(httpGet);
-            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                result = EntityUtils.toString(response.getEntity(), "utf-8");
-            } else {
-                log.error("~~~GET请求连接失败: {}~~~", response.getStatusLine().getStatusCode());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("getQuery fail: url => {}, message => {}", url, e.getMessage());
+        HttpResponse response = httpClient.execute(httpGet);
+        if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+            return EntityUtils.toString(response.getEntity(), "utf-8");
+        } else {
+            log.error("~~~GET请求连接失败: {}~~~", response.getStatusLine().getStatusCode());
+            throw new Exception(String.valueOf(response.getStatusLine().getStatusCode()));
         }
-        return result;
     }
 
-    public static String httpPost(String url, JSONObject params) {
-        HttpResponse response;
-        String result = "";
+    public static String httpPost(String url, JSONObject params) throws Exception {
         HttpClient httpClient = HttpClientBuilder.create().build();
         HttpPost httpPost = new HttpPost(url);
-        try {
-            if (params != null) {
-                //解决中文乱码问题
-                StringEntity entity = new StringEntity(params.toString(), "utf-8");
-                entity.setContentEncoding("UTF-8");
-                entity.setContentType("application/json");
-                httpPost.setEntity(entity);
-            }
-            response = httpClient.execute(httpPost);
-            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                result = EntityUtils.toString(response.getEntity(), "utf-8");
-            } else {
-                log.error("~~~POST请求连接失败: {}~~~", response.getStatusLine().getStatusCode());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("postQuery fail: url => {}, params => {}, message: {}", url, params, e.getMessage());
+        if (params != null) {
+            //解决中文乱码问题
+            StringEntity entity = new StringEntity(params.toString(), "utf-8");
+            entity.setContentEncoding("UTF-8");
+            entity.setContentType("application/json");
+            httpPost.setEntity(entity);
         }
-        return result;
+        HttpResponse response = httpClient.execute(httpPost);
+        if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+            return EntityUtils.toString(response.getEntity(), "utf-8");
+        } else {
+            log.error("~~~POST请求连接失败: {}~~~", response.getStatusLine().getStatusCode());
+            throw new Exception(String.valueOf(response.getStatusLine().getStatusCode()));
+        }
     }
 }
