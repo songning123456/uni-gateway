@@ -13,3 +13,8 @@ logging:
     com: info
   file:
     name: logs/uni-gateway.log
+
+zookeeper:
+  url: 127.0.0.1:22181
+  namespace: admin
+  node: /uni-register

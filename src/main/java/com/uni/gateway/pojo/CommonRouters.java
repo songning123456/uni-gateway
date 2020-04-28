@@ -2,6 +2,7 @@ package com.uni.gateway.pojo;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +26,7 @@ public class CommonRouters {
     private Long total;
 
     @Data
-    public static class Routers {
+    public static class Routers implements Serializable {
 
         private String ipPort;
 
