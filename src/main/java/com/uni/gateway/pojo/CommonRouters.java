@@ -12,15 +12,11 @@ import java.util.Map;
 @Data
 public class CommonRouters {
 
-    private Map<String, Object> dataMap;
+    private Map<String, Object> dataExt;
 
     private Integer status;
 
-    private List<Routers> dataList;
-
-    private Routers data;
-
-    private Integer errCode;
+    private List<Routers> data;
 
     private String message;
 

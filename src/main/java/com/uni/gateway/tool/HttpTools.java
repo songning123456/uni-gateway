@@ -8,6 +8,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
@@ -38,10 +39,22 @@ public class HttpTools {
             //解决中文乱码问题
             StringEntity entity = new StringEntity(params.toString(), "utf-8");
             entity.setContentEncoding("UTF-8");
-//            entity.setContentType("application/json");
-            entity.setContentType("multipart/form-data");
+            entity.setContentType("application/json");
             httpPost.setEntity(entity);
         }
+        HttpResponse response = httpClient.execute(httpPost);
+        if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+            return EntityUtils.toString(response.getEntity(), "utf-8");
+        } else {
+            log.error("~~~POST请求连接失败: {}~~~", response.getStatusLine().getStatusCode());
+            throw new Exception("httpPost fail:" + response.getStatusLine().getStatusCode());
+        }
+    }
+
+    public static String httpPost(String url, MultipartEntityBuilder meb) throws Exception {
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        HttpPost httpPost = new HttpPost(url);
+        httpPost.setEntity(meb.build());
         HttpResponse response = httpClient.execute(httpPost);
         if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
             return EntityUtils.toString(response.getEntity(), "utf-8");

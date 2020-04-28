@@ -3,6 +3,7 @@ package com.uni.gateway.pojo;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import lombok.*;
+import org.apache.http.HttpStatus;
 
 import javax.validation.constraints.NotNull;
 
@@ -17,7 +18,10 @@ import javax.validation.constraints.NotNull;
 public class ErrorResponse {
 
     @NotNull
-    private Integer status;
+    private String phase;
+
+    @Builder.Default
+    private Integer status = HttpStatus.SC_BAD_REQUEST;
 
     @NotNull
     private String message;
