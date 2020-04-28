@@ -55,7 +55,7 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
                 } else if (Constant.POST.equals(request.getMethod()) && request instanceof StandardMultipartHttpServletRequest) {
                     result = HttpTools.httpPost(Constant.HTTP + redirectIpPort + redirectUrl, GpJoinTools.joinFilePost(request));
                 } else {
-                    // todo 待补充
+                    // todo 待补充(DELETE PATCH...)
                 }
             } catch (Exception e) {
                 return ResponseTools.error(response, "THIRD_STEP", e.getMessage());
