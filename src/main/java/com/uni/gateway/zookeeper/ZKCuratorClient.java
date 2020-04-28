@@ -1,8 +1,8 @@
 package com.uni.gateway.zookeeper;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.uni.gateway.pojo.CommonRouters;
+import com.uni.gateway.common.Constant;
+import com.uni.gateway.pojo.Routers;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
@@ -12,8 +12,6 @@ import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  * @author songning
@@ -48,7 +46,7 @@ public class ZKCuratorClient {
         try {
             addChildWatch(zkNode);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("addChildWatch fail: {}", e.getMessage());
         }
     }
 
@@ -70,7 +68,9 @@ public class ZKCuratorClient {
                     log.info("zk节点路径: {}", path);
                     String operatorObjStr = new String(event.getData().getData());
                     log.info("zk传递值: {}", operatorObjStr);
-                    List<CommonRouters.Routers> list = JSON.parseArray(operatorObjStr, CommonRouters.Routers.class);
+                    if (Constant.ZK_ROUTERS.equals(path)) {
+                        Constant.routersCache = JSON.parseArray(operatorObjStr, Routers.class);
+                    }
                 } else {
                     log.info("节点监听类型(other): {}", event.getType());
                     if (event.getData() != null) {
@@ -81,7 +81,6 @@ public class ZKCuratorClient {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
                 log.error("监听节点失败: {}", e.getMessage());
             }
         });

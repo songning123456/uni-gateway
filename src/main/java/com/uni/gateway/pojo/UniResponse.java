@@ -15,10 +15,7 @@ import javax.validation.constraints.NotNull;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class ErrorResponse {
-
-    @NotNull
-    private String phase;
+public class UniResponse {
 
     @Builder.Default
     private Integer status = HttpStatus.SC_BAD_REQUEST;
