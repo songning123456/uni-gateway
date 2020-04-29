@@ -43,7 +43,7 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
             }
             log.info("确认存在 {} 路由", request.getRequestURI());
             Map routers = LoadBalanceTools.getServer(routersList);
-            if (Boolean.getBoolean(routers.get("authority").toString())) {
+            if (!"0".equals(routers.get("accessLevel").toString())) {
                 // todo 权限验证
             }
             String redirectIpPort = routers.get("ipPort").toString();
