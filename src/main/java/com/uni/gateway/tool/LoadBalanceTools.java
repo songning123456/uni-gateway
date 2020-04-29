@@ -1,7 +1,5 @@
 package com.uni.gateway.tool;
 
-import com.uni.gateway.pojo.Routers;
-
 import java.util.*;
 
 /**
@@ -11,13 +9,13 @@ import java.util.*;
  */
 public class LoadBalanceTools {
 
-    public static Routers getServer(List<Routers> params) {
-        List<Routers> copy = new ArrayList<>(params);
-        Iterator<Routers> iterator = copy.iterator();
-        List<Routers> serverList = new ArrayList<>();
+    public static Map getServer(List<Map> params) {
+        List<Map> copy = new ArrayList<>(params);
+        Iterator<Map> iterator = copy.iterator();
+        List<Map> serverList = new ArrayList<>();
         while (iterator.hasNext()) {
-            Routers routers = iterator.next();
-            int weight = routers.getWeight();
+            Map routers = iterator.next();
+            int weight = Integer.parseInt(routers.get("weight").toString());
             for (int i = 0; i < weight; i++) {
                 serverList.add(routers);
             }

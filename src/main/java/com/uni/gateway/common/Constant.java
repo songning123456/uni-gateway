@@ -1,10 +1,5 @@
 package com.uni.gateway.common;
 
-import com.uni.gateway.pojo.Routers;
-
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 /**
  * @author songning
  * @date 2020/4/27
@@ -23,4 +18,6 @@ public class Constant {
     public static final String GET = "GET";
 
     public static final String POST = "POST";
+
+    public static final String ROUTERS_CACHE = "RoutersCache:";
 }

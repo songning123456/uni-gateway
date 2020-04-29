@@ -1,23 +1,24 @@
 package com.uni.gateway.interceptor;
 
 import com.uni.gateway.common.Constant;
+import com.uni.gateway.dao.RedisDao;
 import com.uni.gateway.pojo.UniResponse;
-import com.uni.gateway.pojo.Routers;
 import com.uni.gateway.tool.GpJoinTools;
 import com.uni.gateway.tool.HttpTools;
+import com.uni.gateway.tool.JsonTools;
 import com.uni.gateway.tool.LoadBalanceTools;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.connector.RequestFacade;
 import org.apache.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 /**
  * @author songning
@@ -27,23 +28,27 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 public class RequestInterceptor extends HandlerInterceptorAdapter {
+
+    @Autowired
+    private RedisDao redisDao;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String result = "";
         try {
             log.info("准备判断是否存在此路由: {}", request.getRequestURI());
-            List<Routers> routersList = new ArrayList<>();
-            if (routersList.isEmpty()) {
+            List routersList = JsonTools.convertString2Object(redisDao.getValue(Constant.ROUTERS_CACHE + request.getRequestURI()), List.class);
+            if (routersList == null || routersList.isEmpty()) {
                 return error(response, "routers表里不存在此路由");
             }
             log.info("确认存在 {} 路由", request.getRequestURI());
-            Routers routers = LoadBalanceTools.getServer(routersList);
-            if (routers.getAuthority()) {
+            Map routers = LoadBalanceTools.getServer(routersList);
+            if (Boolean.getBoolean(routers.get("authority").toString())) {
                 // todo 权限验证
             }
-            String redirectIpPort = routers.getIpPort();
+            String redirectIpPort = routers.get("ipPort").toString();
             log.info("重定向ipPort: {}", redirectIpPort);
-            String redirectUrl = routers.getUrl();
+            String redirectUrl = routers.get("url").toString();
             log.info("重定向url: {}", redirectUrl);
             if (Constant.GET.equals(request.getMethod())) {
                 result = HttpTools.httpGet(GpJoinTools.joinGet(redirectIpPort, redirectUrl, request));
