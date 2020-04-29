@@ -12,6 +12,7 @@ import org.apache.catalina.connector.RequestFacade;
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -37,13 +38,13 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
         String result = "";
         try {
             log.info("准备判断是否存在此路由: {}", request.getRequestURI());
-            List routersList = JsonTools.convertString2Object(redisDao.getValue(Constant.ROUTERS_CACHE + request.getRequestURI()), List.class);
+            List routersList = JsonTools.convertString2Object(redisDao.getValue(Constant.ROUTERS_CACHE + request.getMethod() + Constant.COLON + request.getRequestURI()), List.class);
             if (routersList == null || routersList.isEmpty()) {
                 return error(response, "routers表里不存在此路由");
             }
             log.info("确认存在 {} 路由", request.getRequestURI());
             Map routers = LoadBalanceTools.getServer(routersList);
-            if (!"0".equals(routers.get("accessLevel").toString())) {
+            if (!StringUtils.isEmpty(routers.get("roles"))) {
                 // todo 权限验证
             }
             String redirectIpPort = routers.get("ipPort").toString();

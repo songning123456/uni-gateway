@@ -19,5 +19,7 @@ public class Constant {
 
     public static final String POST = "POST";
 
+    public static final String COLON = ":";
+
     public static final String ROUTERS_CACHE = "RoutersCache:";
 }
