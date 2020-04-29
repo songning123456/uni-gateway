@@ -13,6 +13,8 @@ import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * @author songning
  * @date 2020/4/24
@@ -69,7 +71,15 @@ public class ZKCuratorClient {
                     String operatorObjStr = new String(event.getData().getData());
                     log.info("zk传递值: {}", operatorObjStr);
                     if (Constant.ZK_ROUTERS.equals(path)) {
-                        Constant.routersCache = JSON.parseArray(operatorObjStr, Routers.class);
+                        List<Routers> routersList = JSON.parseArray(operatorObjStr, Routers.class);
+                        synchronized (this) {
+                            Constant.ROUTERS_CACHE.clear();
+                            for (Routers routers : routersList) {
+                                if (!Constant.ROUTERS_CACHE.contains(routers)) {
+                                    Constant.ROUTERS_CACHE.add(routers);
+                                }
+                            }
+                        }
                     }
                 } else {
                     log.info("节点监听类型(other): {}", event.getType());

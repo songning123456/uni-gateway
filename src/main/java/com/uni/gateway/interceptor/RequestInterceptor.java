@@ -31,7 +31,7 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
         String result = "";
         try {
             log.info("准备判断是否存在此路由: {}", request.getRequestURI());
-            List<Routers> routersList = Constant.routersCache.stream().filter(item -> item.getUrl().equals(request.getRequestURI())).collect(Collectors.toList());
+            List<Routers> routersList = Constant.ROUTERS_CACHE.stream().filter(item -> item.getUrl().equals(request.getRequestURI())).collect(Collectors.toList());
             if (routersList.isEmpty()) {
                 return error(response, "routers表里不存在此路由");
             }

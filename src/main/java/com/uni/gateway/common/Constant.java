@@ -2,8 +2,8 @@ package com.uni.gateway.common;
 
 import com.uni.gateway.pojo.Routers;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author songning
@@ -26,5 +26,5 @@ public class Constant {
 
     public static final String ZK_ROUTERS = "/uni-register/routers";
 
-    public static List<Routers> routersCache = new ArrayList<>();
+    public static final List<Routers> ROUTERS_CACHE = new CopyOnWriteArrayList<>();
 }
