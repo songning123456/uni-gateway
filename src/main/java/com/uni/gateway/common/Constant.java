@@ -23,8 +23,4 @@ public class Constant {
     public static final String GET = "GET";
 
     public static final String POST = "POST";
-
-    public static final String ZK_ROUTERS = "/uni-register/routers";
-
-    public static final List<Routers> ROUTERS_CACHE = new CopyOnWriteArrayList<>();
 }

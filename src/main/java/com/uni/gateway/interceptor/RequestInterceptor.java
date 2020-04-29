@@ -15,6 +15,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +32,7 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
         String result = "";
         try {
             log.info("准备判断是否存在此路由: {}", request.getRequestURI());
-            List<Routers> routersList = Constant.ROUTERS_CACHE.stream().filter(item -> item.getUrl().equals(request.getRequestURI())).collect(Collectors.toList());
+            List<Routers> routersList = new ArrayList<>();
             if (routersList.isEmpty()) {
                 return error(response, "routers表里不存在此路由");
             }
