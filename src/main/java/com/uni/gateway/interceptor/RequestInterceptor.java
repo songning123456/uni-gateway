@@ -64,6 +64,7 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
             return error(response, e.getMessage());
         }
         log.info("返回重定向结果: {}", result);
+        response.setContentType("text/html;charset=utf-8");
         response.getWriter().append(result);
         return false;
     }
