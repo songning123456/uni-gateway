@@ -1,6 +1,7 @@
 package com.uni.gateway.interceptor;
 
 import com.uni.gateway.common.Constant;
+import com.uni.gateway.consumer.RouterConsumer;
 import com.uni.gateway.dao.RedisDao;
 import com.uni.gateway.pojo.UniResponse;
 import com.uni.gateway.tool.GpJoinTools;
@@ -32,13 +33,16 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
     private RedisDao redisDao;
+    @Autowired
+    private RouterConsumer routerConsumer;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String result = "";
         try {
             log.info("准备判断是否存在此路由: {}", request.getRequestURI());
-            List routersList = JsonTools.convertString2Object(redisDao.getValue(Constant.ROUTERS_CACHE + request.getMethod() + Constant.COLON + request.getRequestURI()), List.class);
+            List routersList = routerConsumer.getRoutersByUrl(request.getRequestURI());
+//            List routersList = JsonTools.convertString2Object(redisDao.getValue(Constant.ROUTERS_CACHE + request.getMethod() + Constant.COLON + request.getRequestURI()), List.class);
             if (routersList == null || routersList.isEmpty()) {
                 return error(response, "routers表里不存在此路由");
             }

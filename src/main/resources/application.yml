@@ -18,6 +18,19 @@ spring:
         min-idle: 0
     timeout: 5000
 
+dubbo:
+  application:
+    name:  dubbo-consumer
+  registry:
+    address: 192.168.0.108:2181
+    protocol: zookeeper
+    check: false
+  monitor:
+    protocol: register
+  consumer:
+    check:  false
+    timeout: 3000
+
 logging:
   level:
     root: warn

@@ -50,6 +50,16 @@
             <groupId>net.sourceforge.htmlunit</groupId>
             <artifactId>htmlunit</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.alibaba.boot</groupId>
+            <artifactId>dubbo-spring-boot-starter</artifactId>
+            <version>0.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.uni</groupId>
+            <artifactId>uni-dubbo</artifactId>
+            <version>1.0.1-RELEASE</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -62,6 +72,10 @@
     </build>
 
     <repositories>
+        <repository>
+            <id>sonin</id>
+            <url>http://192.168.0.109:8081/repository/sonin-release/</url>
+        </repository>
         <repository>
             <id>alibab</id>
             <name>alibaba</name>
