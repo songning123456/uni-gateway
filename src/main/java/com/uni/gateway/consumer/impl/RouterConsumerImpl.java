@@ -21,4 +21,9 @@ public class RouterConsumerImpl implements RouterConsumer {
     public List getRoutersByUrl(String url) {
         return JSON.parseArray(routerService.getRoutersByUrl(url));
     }
+
+    @Override
+    public List getRoutersByTypeAndUrl(String requestType, String url) {
+        return JSON.parseArray(routerService.getRoutersByTypeAndUrl(requestType, url));
+    }
 }

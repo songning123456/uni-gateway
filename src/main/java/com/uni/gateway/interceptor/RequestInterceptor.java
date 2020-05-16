@@ -2,11 +2,9 @@ package com.uni.gateway.interceptor;
 
 import com.uni.gateway.common.Constant;
 import com.uni.gateway.consumer.RouterConsumer;
-import com.uni.gateway.dao.RedisDao;
 import com.uni.gateway.pojo.UniResponse;
 import com.uni.gateway.tool.GpJoinTools;
 import com.uni.gateway.tool.HttpTools;
-import com.uni.gateway.tool.JsonTools;
 import com.uni.gateway.tool.LoadBalanceTools;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.connector.RequestFacade;
@@ -32,8 +30,6 @@ import java.util.Map;
 public class RequestInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
-    private RedisDao redisDao;
-    @Autowired
     private RouterConsumer routerConsumer;
 
     @Override
@@ -41,8 +37,7 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
         String result = "";
         try {
             log.info("准备判断是否存在此路由: {}", request.getRequestURI());
-            List routersList = routerConsumer.getRoutersByUrl(request.getRequestURI());
-//            List routersList = JsonTools.convertString2Object(redisDao.getValue(Constant.ROUTERS_CACHE + request.getMethod() + Constant.COLON + request.getRequestURI()), List.class);
+            List routersList = routerConsumer.getRoutersByTypeAndUrl(request.getMethod(), request.getRequestURI());
             if (routersList == null || routersList.isEmpty()) {
                 return error(response, "routers表里不存在此路由");
             }
