@@ -47,6 +47,12 @@ eureka:
 hystrix:
   metrics:
     enabled: true
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 30000 # 熔断的超时时间(毫秒)，默认只有2秒
 
 logging:
   level:
