@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  * description
  */
 @Configuration
-public class UniConfiguration {
+public class BeanConfig {
 
     @Bean
     public HostAddrKeyResolver hostAddrKeyResolver() {
