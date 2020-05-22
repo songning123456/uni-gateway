@@ -2,9 +2,32 @@ server:
   port: 7080
 
 spring:
-  mvc:
-    servlet:
-      path: /uni-gateway
+  application:
+    name: uniGateway # 发布服务指定应用名称，名称中不要带"-"
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: false # 是否与服务注册于发现组件进行结合
+          lower-case-service-id: true # 是将请求路径上的服务名配置为小写(因为服务注册的时候，向注册中心注册时将服务名转成大写的了)
+      routes:
+        - id: cykb-server
+          uri: lb://cykbServer
+          predicates:
+            - Path=/cykb/**
+#          filters:
+#            - StripPrefix=1
+        - id: baidu-server
+          uri: http://www.baidu.com
+          predicates:
+            - Path=/baidu/**
+          filters:
+            - StripPrefix=1
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7082/eureka/ # 指定注册中心的地址，以便使用服务发现功能
 
 logging:
   level:
