@@ -15,19 +15,38 @@ spring:
           uri: lb://cykbServer
           predicates:
             - Path=/cykb/**
-#          filters:
-#            - StripPrefix=1
+          filters:
+            - name: Hystrix # 熔断
+              args:
+                name: fallbackcmd
+                fallbackUri: forward:/fallback
+            - name: Retry # 重试路由器
+              args:
+                retries: 3
+                status: 503
+            - name: RequestRateLimiter #  限流
+              args:
+                key-resolver: "#{@hostAddrKeyResolver}"
+                redis-rate-limiter.replenishRate: 1
+                redis-rate-limiter.burstCapacity: 3
         - id: baidu-server
           uri: http://www.baidu.com
           predicates:
             - Path=/baidu/**
           filters:
             - StripPrefix=1
+  redis:
+    host: localhost
+    port: 6379
 
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:7082/eureka/ # 指定注册中心的地址，以便使用服务发现功能
+
+hystrix:
+  metrics:
+    enabled: true
 
 logging:
   level:
