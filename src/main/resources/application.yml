@@ -24,11 +24,11 @@ spring:
               args:
                 retries: 3
                 status: 503
-            - name: RequestRateLimiter #  限流
+            - name: RequestRateLimiter # 限流
               args:
-                key-resolver: "#{@hostAddrKeyResolver}"
-                redis-rate-limiter.replenishRate: 1
-                redis-rate-limiter.burstCapacity: 3
+                key-resolver: "#{@hostAddrKeyResolver}" # 限流的解析器的Bean对象的名字
+                redis-rate-limiter.replenishRate: 1 # 令牌通每秒填充平均速率
+                redis-rate-limiter.burstCapacity: 3 # 令牌桶的总容量
         - id: baidu-server
           uri: http://www.baidu.com
           predicates:
