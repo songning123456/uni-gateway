@@ -1,5 +1,6 @@
 package com.uni.gateway.config;
 
+import com.uni.gateway.bean.HostAddrKeyResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

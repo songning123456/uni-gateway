@@ -1,4 +1,4 @@
-package com.uni.gateway.config;
+package com.uni.gateway.bean;
 
 import org.springframework.cloud.gateway.filter.ratelimit.KeyResolver;
 import org.springframework.web.server.ServerWebExchange;
