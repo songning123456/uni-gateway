@@ -12,7 +12,7 @@ spring:
           lower-case-service-id: true # 是将请求路径上的服务名配置为小写(因为服务注册的时候，向注册中心注册时将服务名转成大写的了)
       routes:
         - id: cykb-server
-          uri: lb://cykbServer
+          uri: lb://cykbEsServer
           predicates:
             - Path=/cykb/**
           filters:
@@ -27,8 +27,8 @@ spring:
             - name: RequestRateLimiter # 限流
               args:
                 key-resolver: "#{@hostAddrKeyResolver}" # 限流的解析器的Bean对象的名字
-                redis-rate-limiter.replenishRate: 1 # 令牌通每秒填充平均速率
-                redis-rate-limiter.burstCapacity: 3 # 令牌桶的总容量
+                redis-rate-limiter.replenishRate: 20 # 令牌通每秒填充平均速率
+                redis-rate-limiter.burstCapacity: 100 # 令牌桶的总容量
         - id: baidu-server
           uri: http://www.baidu.com
           predicates:
@@ -36,13 +36,13 @@ spring:
           filters:
             - StripPrefix=1
   redis:
-    host: localhost
+    host: 192.168.0.110
     port: 6379
 
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:7082/eureka/ # 指定注册中心的地址，以便使用服务发现功能
+      defaultZone: http://192.168.0.109:7082/eureka/ # 指定注册中心的地址，以便使用服务发现功能
 
 hystrix:
   metrics:
