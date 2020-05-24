@@ -43,6 +43,9 @@ eureka:
   client:
     service-url:
       defaultZone: http://192.168.0.109:7082/eureka/ # 指定注册中心的地址，以便使用服务发现功能
+  instance:
+    preferIpAddress: true
+    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}
 
 hystrix:
   metrics:
